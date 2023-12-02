@@ -2,7 +2,7 @@ import numpy as np
 
 with open('ex1/data.txt', 'r') as file:
     # Read all lines from the file
-    lines = file.readlines()
+    lines = [line.strip() for line in file.readlines()]
 
 # Remove newline characters from each line
 lines = [line.strip() for line in lines]
