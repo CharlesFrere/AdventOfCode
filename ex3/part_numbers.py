@@ -2,8 +2,7 @@ import numpy as np
 import re
 from scipy.signal import convolve2d
 
-SYMBOLS = set("*$+#")
-
+SYMBOLS = {'%', '&', '/', '#', '-', '$', '+', '.', '@', '*', '='}
 
 def get_neighbours(grid):
     return convolve2d(grid, np.ones((3, 3)), mode='same', boundary='fill', fillvalue=0) - grid
@@ -15,12 +14,10 @@ def get_data():
     return lines
 
 
-def is_symbol(elem):
-    return elem in SYMBOLS
+def is_symbol(char):
+    return char != "." and not char.isalnum()
 
-
-if __name__ == "__main__":
-    engine = get_data()
+def get_part_numbers(engine):
     get_symbols = np.vectorize(is_symbol)
 
     char_matrix = np.array([list(line) for line in engine])
@@ -37,4 +34,21 @@ if __name__ == "__main__":
                 part_number = int(line[start:end])
                 part_numbers.append(part_number)
 
+    return part_numbers
+
+def get_symbols(engine):
+    symbols = set()
+
+    for line in engine:
+        for char in line:
+            if char.isalnum() or char.isspace():
+                continue
+            symbols.add(char)
+
+    return symbols
+
+if __name__ == "__main__":
+    engine = get_data()
+    part_numbers = get_part_numbers(engine)
     print(sum(part_numbers))
+    # print(get_symbols(engine))
